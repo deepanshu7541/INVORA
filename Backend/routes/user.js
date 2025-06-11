@@ -22,6 +22,6 @@ router.post("/rooms/:roomId/bins", authMiddleware, addBin);
 router.delete("/bins/:binId", authMiddleware, deleteBin);
 // router.get("/bins", authMiddleware, getAllBins); 
 router.post("/with-rooms", authMiddleware, createHospitalWithRooms);
-router.get("/profile", authMiddleware, getProfile);
+router.get("/profile", getProfile);
 
 module.exports = router;

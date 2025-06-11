@@ -11,6 +11,7 @@ import Racks from "./components/Racks"
 import Profile from "./components/Profile"
 import Logout from "./components/Logout"
 import Login from "./components/Login"
+import Register from "./components/Register";
 import Contact from './components/Contact';
 
 import Inventory from './pages/Inventory/Inventory';
@@ -45,6 +46,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="logout" element={<Logout />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           <Route path="/shop" element={<Inventory />} />
           <Route path="/cart" element={<Cart />} />

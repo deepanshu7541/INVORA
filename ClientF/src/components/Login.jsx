@@ -36,7 +36,7 @@ const Login = () => {
         toast.success("Login successful");
         navigate("/dashboard");
       } catch (err) {
-        console.log("Login error:", err); // Debug
+        console.log("Login error:", err);
         toast.error(err.response?.data?.message || "Login failed");
       }
     } else {
@@ -46,7 +46,7 @@ const Login = () => {
 
   useEffect(() => {
     if (token !== "") {
-      console.log("User already logged in, token:", token); // Debug
+      console.log("User already logged in, token:", token);
       toast.success("You are already logged in");
       navigate("/dashboard");
     }
