@@ -3,7 +3,7 @@ const User = require("../models/User");
 const Hospital = require("../models/Hospital");
 const Room = require("../models/Rooms");
 const Bin = require("../models/Bin");
-const Profile = require("../models/Profile").default;
+const Profile = require("../models/Profile");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -91,24 +91,56 @@ const addHospital = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  let foundUser = await User.findOne({ email: req.body.email });
-  if (foundUser === null) {
-    let { username, email, password } = req.body;
-    if (username.length && email.length && password.length) {
-      const person = new User({
-        name: username,
-        email: email,
-        password: password,
-      });
-      await person.save();
-      return res.status(201).json({ person });
-    }else{
-        return res.status(400).json({msg: "Please add all values in the request body"});
+  try {
+    const { name, email, password, role } = req.body;
+
+    // Check if user already exists
+    const foundUser = await User.findOne({ email });
+    if (foundUser) {
+      return res.status(400).json({ msg: "Email already in use" });
     }
-  } else {
-    return res.status(400).json({ msg: "Email already in use" });
+
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({ msg: "Please add all values in the request body" });
+    }
+
+    // Create new user with optional role
+    const person = new User({
+      name: name,
+      email,
+      password,
+      role: role || "nurse", // default to 'nurse' if not provided
+    });
+
+    await person.save();
+
+    return res.status(201).json({ person });
+  } catch (err) {
+    console.error("Error in register:", err);
+    return res.status(500).json({ msg: "Server error" });
   }
 };
+
+// const register = async (req, res) => {
+//   let foundUser = await User.findOne({ email: req.body.email });
+//   if (foundUser === null) {
+//     let { username, email, password } = req.body;
+//     if (username.length && email.length && password.length) {
+//       const person = new User({
+//         name: username,
+//         email: email,
+//         password: password,
+//       });
+//       await person.save();
+//       return res.status(201).json({ person });
+//     }else{
+//         return res.status(400).json({msg: "Please add all values in the request body"});
+//     }
+//   } else {
+//     return res.status(400).json({ msg: "Email already in use" });
+//   }
+// };
 
 // ✅ Get a Single Hospital
 const getHospitalById = async (req, res) => {

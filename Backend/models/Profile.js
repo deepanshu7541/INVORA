@@ -10,4 +10,4 @@ const profileSchema = new mongoose.Schema({
 
 const Profile = mongoose.model('Profile', profileSchema);
 
-module.exports = Profile; // ✅ CommonJS
+module.exports = Profile;

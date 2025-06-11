@@ -43,7 +43,7 @@ function App() {
           <Route path="/history" element={<History />} />
           <Route path="/bins" element={<Bins />} />
           <Route path="/racks" element={<Racks />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
           <Route path="logout" element={<Logout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
