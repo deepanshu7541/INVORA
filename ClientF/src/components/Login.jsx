@@ -30,14 +30,15 @@ const Login = () => {
           "http://localhost:3000/api/v1/login",
           formData
         );
-        localStorage.setItem("auth", JSON.stringify(response.data.token));
+        localStorage.setItem("auth", JSON.stringify({ token, user: response.data.user }));
+        // localStorage.setItem("auth", JSON.stringify(response.data.token));
         setToken(response.data.token); // Update token state
         console.log("Login successful, token saved:", response.data.token); // Debug
         toast.success("Login successful");
         navigate("/dashboard");
       } catch (err) {
         console.log("Login error:", err);
-        toast.error(err.response?.data?.message || "Login failed");
+        toast.error(err.response?.data?.msg || "Login failed");
       }
     } else {
       toast.error("Please fill all inputs");

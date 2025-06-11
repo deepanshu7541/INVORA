@@ -14,27 +14,65 @@ const login = async (req, res) => {
     });
   }
 
-  let foundUser = await User.findOne({ email: req.body.email });
-  if (foundUser) {
-    const isMatch = await foundUser.comparePassword(password);
-
-    if (isMatch) {
-      const token = jwt.sign(
-        { id: foundUser._id, name: foundUser.name },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "30d",
-        }
-      );
-
-      return res.status(200).json({ msg: "user logged in", token });
-    } else {
-      return res.status(400).json({ msg: "Bad password" });
-    }
-  } else {
-    return res.status(400).json({ msg: "Bad credentails" });
+  const foundUser = await User.findOne({ email });
+  if (!foundUser) {
+    return res.status(400).json({ msg: "Bad credentials" });
   }
+
+  const isMatch = await foundUser.comparePassword(password);
+  if (!isMatch) {
+    return res.status(400).json({ msg: "Bad password" });
+  }
+
+  const token = jwt.sign(
+    { id: foundUser._id, name: foundUser.name },
+    process.env.JWT_SECRET,
+    { expiresIn: "30d" }
+  );
+
+  // ✅ Send user object along with token
+  return res.status(200).json({
+    msg: "user logged in",
+    token,
+    user: {
+      id: foundUser._id,
+      name: foundUser.name,
+      email: foundUser.email,
+      role: foundUser.role
+    }
+  });
 };
+
+// const login = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   if (!email || !password) {
+//     return res.status(400).json({
+//       msg: "Bad request. Please add email and password in the request body",
+//     });
+//   }
+
+//   let foundUser = await User.findOne({ email: req.body.email });
+//   if (foundUser) {
+//     const isMatch = await foundUser.comparePassword(password);
+
+//     if (isMatch) {
+//       const token = jwt.sign(
+//         { id: foundUser._id, name: foundUser.name },
+//         process.env.JWT_SECRET,
+//         {
+//           expiresIn: "30d",
+//         }
+//       );
+
+//       return res.status(200).json({ msg: "user logged in", token });
+//     } else {
+//       return res.status(400).json({ msg: "Bad password" });
+//     }
+//   } else {
+//     return res.status(400).json({ msg: "Bad credentails" });
+//   }
+// };
 
 const dashboard = async (req, res) => {
   const luckyNumber = Math.floor(Math.random() * 100);
