@@ -4,10 +4,10 @@ const binSchema = new mongoose.Schema({
   binNumber: { type: String, required: true },
   color: {
     type: String,
-    enum: ["blue", "black", "green"], // ✅ Bins can only be these colors
+    enum: ["blue", "black", "green"],
     required: true,
   },
-  items: [{ type: String }], // Array of items inside the bin
+  items: [{ type: String }], 
   room: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true }, // ✅ Linked to a room
 });
 

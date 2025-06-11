@@ -43,11 +43,11 @@ const Sidebar = () => {
       <div className="sidebar-header">
         <div className="logo-container">
           {collapsed ? (
-            <div className="logo">SI</div>
+            <div className="logo">I</div>
           ) : (
             <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/talented-ixaecvMYO016eTZGpCSYxEexs2lopI.png"
-              alt="Surgical Management System Logo"
+              src="./logu.png"
+              alt="Surgical System Logo"
               className="sidebar-logo"
             />
           )}

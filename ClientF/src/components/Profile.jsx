@@ -1,15 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import './Profile.css';
 
 function Profile() {
-  const [profile] = useState({
-    name: 'Deepanshu Chand',
-    id: 'N12345',
-    department: 'Surgery',
-    hospital: 'Central Hospital'
-  });
+  // const [profile] = useState({
+  //   name: 'Deepanshu Chand',
+  //   id: 'N12345',
+  //   department: 'Surgery',
+  //   hospital: 'Central Hospital'
+  // });
+
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/profile');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setProfile(data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading) return <p>Loading profile...</p>;
+  if (!profile) return <p>Profile not found.</p>;
 
   return (
     <div className="profile-container"> {/* ✅ Added Flex Container */}

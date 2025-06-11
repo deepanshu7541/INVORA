@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Hospital = require("../models/Hospital");
 const Room = require("../models/Rooms");
 const Bin = require("../models/Bin");
+const Profile = require("../models/Profile").default;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -51,10 +52,20 @@ const getAllUsers = async (req, res) => {
 };
 
 const getAllHospitals = async (req, res) => {
-  let hospitals = await Hospital.find({});
-
-  return res.status(200).json({ hospitals });
+  try {
+    const hospitals = await Hospital.find().populate("rooms"); // ← THIS IS REQUIRED
+    res.status(200).json({ success: true, hospitals });
+  } catch (error) {
+    console.error("Error fetching hospitals:", error);
+    res.status(500).json({ success: false, error: "Failed to fetch hospitals" });
+  }
 };
+
+// const getAllHospitals = async (req, res) => {
+//   let hospitals = await Hospital.find({});
+
+//   return res.status(200).json({ hospitals });
+// };
 
 const addHospital = async (req, res) => {
   try {
@@ -222,6 +233,64 @@ const getAllBins = async (req, res) => {
   }
 };
 
+const createHospitalWithRooms = async (req, res) => {
+  try {
+    const { name, address, phone, rooms } = req.body;
+
+    if (!name || !address || !Array.isArray(rooms)) {
+      return res.status(400).json({ success: false, error: "Invalid hospital or room data" });
+    }
+
+    // Create the hospital first
+    const hospital = new Hospital({
+      name,
+      address,
+      phone,
+      user: req.user.id,
+    });
+    await hospital.save();
+
+    // Create each room with the hospital reference
+    const roomIds = [];
+    for (const room of rooms) {
+      const { name, floor, type } = room;
+      if (!name || !floor || !type) continue; // skip invalid rooms
+
+      const newRoom = new Room({
+        name,
+        floor,
+        type,
+        hospital: hospital._id,
+      });
+      await newRoom.save();
+      roomIds.push(newRoom._id);
+    }
+
+    // Update hospital with room references
+    hospital.rooms = roomIds;
+    await hospital.save();
+
+    res.status(201).json({ success: true, message: "Hospital and rooms created", hospital });
+  } catch (error) {
+    console.error("Error creating hospital with rooms:", error);
+    res.status(500).json({ success: false, error: "Failed to create hospital and rooms" });
+  }
+};
+
+const getProfile = async (req, res) => {
+  try {
+    const profile = await Profile.findOne(); // ✅ now this should work
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+    res.status(200).json(profile);
+  } catch (err) {
+    console.log("Profile model:", Profile);
+    console.error("Error in getProfile:", err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -238,4 +307,6 @@ module.exports = {
   getAllBins,
   addBin,
   deleteBin,
+  createHospitalWithRooms,
+  getProfile,
 };

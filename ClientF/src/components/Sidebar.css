@@ -122,8 +122,8 @@
   .sidebar-logo {
     max-width: 100%;
     height: auto;
-    max-height: 40px;
-    filter: brightness(0) invert(1); /* Make the logo white */
+    max-height: 50px;
+    /* filter: brightness(0) invert(1); */
     transition: all 0.3s ease;
   }
   

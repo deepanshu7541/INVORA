@@ -6,10 +6,31 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const mainRouter = require("./routes/user");
+const authMiddleware = require('./middleware/auth')
 
 app.use(express.json());
 app.use(cors());
 app.use("/api/v1", mainRouter);
+
+// Middleware to count requests (DDos attack simulation)
+let totalRequestCount = 0;
+
+app.use((req, res, next) => {
+  totalRequestCount++;
+  console.log(`Request #${totalRequestCount}`);
+
+  if (totalRequestCount > 10) {
+    console.log('Too many requests. Simulating DDos attack...');
+    res.status(429).send('Too many requests. Please try again later.');
+    process.exit(1);
+  } else {
+    next();
+  }
+});
+
+app.use("/api/v1", mainRouter); // your route
+
+
 
 const port = process.env.PORT || 3000;
 

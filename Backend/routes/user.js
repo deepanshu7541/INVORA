@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { login, register, dashboard, getAllUsers, getAllHospitals, addHospital, getHospitalById, updateHospital, deleteHospital, getAllRooms, getHospitalsWithID, getRoomsForHospital, getAllBins, addBin, deleteBin } = require("../controllers/user");
+const { login, register, dashboard, getAllUsers, getAllHospitals, addHospital, getHospitalById, updateHospital, deleteHospital, getAllRooms, getHospitalsWithID, getRoomsForHospital, getAllBins, addBin, deleteBin, createHospitalWithRooms, getProfile } = require("../controllers/user");
 const authMiddleware = require('../middleware/auth')
 
 router.route("/login").post(login);
@@ -14,12 +14,14 @@ router.put("/hospitals/:id", authMiddleware, updateHospital); // ✅ Update a ho
 router.delete("/hospitals/:id", authMiddleware, deleteHospital); // ✅ Delete a hospital
 // router.route("/posthospitals").post(authMiddleware, postHospitals);
 router.post("/hospitals/add", authMiddleware, addHospital);
-router.get("/allrooms", authMiddleware, getAllRooms);
+router.get("/allrooms", getAllRooms);
 router.get("/hospitals/:hospitalId", authMiddleware, getHospitalsWithID);
 router.get("/hospitals/:hospitalId/rooms", authMiddleware, getRoomsForHospital);
 router.get("/rooms/:roomId/bins", authMiddleware, getAllBins);
 router.post("/rooms/:roomId/bins", authMiddleware, addBin);
 router.delete("/bins/:binId", authMiddleware, deleteBin);
 // router.get("/bins", authMiddleware, getAllBins); 
+router.post("/with-rooms", authMiddleware, createHospitalWithRooms);
+router.get("/profile", authMiddleware, getProfile);
 
 module.exports = router;

@@ -1,39 +1,4 @@
-// "use client"
-// import "./Header.css"
-
-// const Header = () => {
-//   const handleLogout = () => {
-//     // Implement logout functionality
-//     console.log("Logging out...")
-//   }
-
-//   return (
-//     <div className="header">
-//       {/* <div className="search-bar">
-//         <input type="text" placeholder="Search inventory..." />
-//         <button className="search-button">Search</button>
-//       </div> */}
-//       <div className="user-section">
-//         <div className="user-info">
-//           <span className="user-name">Dr. John Smith</span>
-//           <span className="user-role">Admin</span>
-//         </div>
-//         <div className="user-avatar">JS</div>
-//         <button className="logout-button" onClick={handleLogout}>
-//           Logout
-//         </button>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Header
-
-
-
-
-
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import Logout from './Logout';
@@ -47,15 +12,40 @@ const Header = () => {
     console.log('Logging out...');
   };
 
+  const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          const response = await fetch('http://localhost:3000/api/v1/profile');
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setProfile(data);
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchProfile();
+    }, []);
+  
+    if (loading) return <p>Loading profile...</p>;
+    if (!profile) return <p>Profile not found.</p>;
+
   return (
     <div className="header">
       <div className="user-section">
         <div className="user-info">
-          <span className="user-name">Deepanshu Chand</span>
-          <span className="user-role">Admin</span>
+          <span className="user-name">{profile.name}</span>
+          <span className="user-role">{profile.role}</span>
         </div>
         <div className="user-avatar">
-          <Link to="/profile" className="avatar-link">DC</Link>
+          <Link to="/profile" className="avatar-link">{profile.name[0]}</Link>
         </div>
         <button className="logout-button" onClick={handleLogout}>
           Logout

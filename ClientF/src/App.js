@@ -1,37 +1,6 @@
-// import logo from './logo.svg';
-// import'./components/Dashboard';
-// import './App.css';
-// import Dashboard from './components/Dashboard';
-
-// function App() {
-//   return (
-//     <Dashboard/>
-//     // <div className="App">
-//     //   <header className="App-header">
-//     //     <img src={logo} className="App-logo" alt="logo" />
-//     //     <p>
-//     //       Edit <code>src/App.js</code> and save to reload.
-//     //     </p>
-//     //     <a
-//     //       className="App-link"
-//     //       href="https://reactjs.org"
-//     //       target="_blank"
-//     //       rel="noopener noreferrer"
-//     //     >
-//     //       Learn React
-//     //     </a>
-//     //   </header>
-//     // </div>
-//   );
-// }
-
-// export default App;
-
-
-
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Hospitals from './components/Hospitals';
@@ -42,20 +11,31 @@ import Racks from "./components/Racks"
 import Profile from "./components/Profile"
 import Logout from "./components/Logout"
 import Login from "./components/Login"
+import Contact from './components/Contact';
+
+import Inventory from './pages/Inventory/Inventory';
+import Cart from './pages/Cart/Cart';
+// import Profile from './pages/Profile/Profile.jsx';
+// import Logout from './pages/Logout';
+// import Success from './components/Success/Success';
+import { CartProvider } from './context/CartContext';
 
 // import  './components/Dashboard.jsx';
 // import  './components/Hospitals.jsx';
 import "./App.css"
+const isAuthenticated = localStorage.getItem("auth");
 
 function App() {
   return (
+    <CartProvider>
     <Router>
       <div className="App">
         {/* <Sidebar/> */}
         {/* <Dashboard/>
         <Hospitals/> */}
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/hospitals" element={<Hospitals />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/" element={<Dashboard />} />
@@ -64,10 +44,18 @@ function App() {
           <Route path="/racks" element={<Racks />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="logout" element={<Logout />} />
-          <Route path="login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/shop" element={<Inventory />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path='/contact' element={<Contact />} />
+          {/* <Route path="/success" element={<Success />} /> */}
         </Routes>
       </div>
     </Router>
+    </CartProvider>
   )
 }
 
