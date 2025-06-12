@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import Logout from './Logout';
-import './Header.css'; // Assuming you have a CSS file for styling
+import './Header.css';
 
 const Header = () => {
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
   const handleLogout = () => {
     // Implement logout functionality
     navigate("/logout");
@@ -13,17 +13,17 @@ const Header = () => {
   };
 
   const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const auth = JSON.parse(localStorage.getItem("auth"));
+  const currentUserEmail = auth?.user?.email;
   
     useEffect(() => {
       const fetchProfile = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/v1/profile');
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
+          const response = await fetch('http://localhost:3000/api/v1/users');
+          if (!response.ok) throw new Error('Network response was not ok');
           const data = await response.json();
-          setProfile(data);
+          setProfile(data.users);
         } catch (error) {
           console.error('Error fetching profile:', error);
         } finally {
@@ -36,16 +36,18 @@ const Header = () => {
   
     if (loading) return <p>Loading profile...</p>;
     if (!profile) return <p>Profile not found.</p>;
+    const userProfile = profile.find(user => user.email === currentUserEmail);
+    if (!userProfile) return <p>No matching profile found.</p>;
 
   return (
     <div className="header">
       <div className="user-section">
         <div className="user-info">
-          <span className="user-name">{profile.name}</span>
-          <span className="user-role">{profile.role}</span>
+          <span className="user-name">{userProfile.name}</span>
+          <span className="user-role">{userProfile.role}</span>
         </div>
         <div className="user-avatar">
-          <Link to="/profile" className="avatar-link">{profile.name[0]}</Link>
+          <Link to="/profile" className="avatar-link">{userProfile.name[0]}</Link>
         </div>
         <button className="logout-button" onClick={handleLogout}>
           Logout

@@ -13,6 +13,7 @@ import Logout from "./components/Logout"
 import Login from "./components/Login"
 import Register from "./components/Register";
 import Contact from './components/Contact';
+import Nurse from './components/Nurse';
 
 import Inventory from './pages/Inventory/Inventory';
 import Cart from './pages/Cart/Cart';
@@ -53,6 +54,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/logout" element={<Logout />} />
           <Route path='/contact' element={<Contact />} />
+          <Route path="/nurse" element={<Nurse />} />
           {/* <Route path="/success" element={<Success />} /> */}
         </Routes>
       </div>

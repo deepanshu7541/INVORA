@@ -39,7 +39,7 @@ function Profile() {
       <div className="profile">
         <div className="profile-card">
           <div className="profile-avatar">
-            <span>{userProfile.name}</span>
+            <span>{userProfile.name[0]}</span>
           </div>
           <div className="profile-info">
             <div className="info-group">

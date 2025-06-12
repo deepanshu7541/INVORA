@@ -361,6 +361,34 @@ const getProfile = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    return res.status(200).json({ msg: "User deleted successfully" });
+  } catch (err) {
+    console.error("Delete user error:", err);
+    return res.status(500).json({ msg: "Server error" });
+  }
+};
+
+const editUser = async (req, res) => {
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!updated) return res.status(404).json({ msg: "User not found" });
+
+    return res.status(200).json({ msg: "User updated", user: updated });
+  } catch (err) {
+    console.error("Update error:", err);
+    return res.status(500).json({ msg: "Update failed" });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -379,4 +407,6 @@ module.exports = {
   deleteBin,
   createHospitalWithRooms,
   getProfile,
+  deleteUser,
+  editUser,
 };

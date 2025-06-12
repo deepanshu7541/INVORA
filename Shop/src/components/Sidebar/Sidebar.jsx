@@ -31,7 +31,10 @@ function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <img src="../../../public/talented.png" alt="Surgical Inventory Logo" className="sidebar-logo" />
+        <a href="http://localhost:3001">
+          <img src="/talented.png" alt="Surgical Inventory Logo" className="sidebar-logo" />
+        </a>
+        {/* <img src="../../../public/talented.png" alt="Surgical Inventory Logo" className="sidebar-logo" /> */}
       </div>
       
       <nav className="sidebar-nav">

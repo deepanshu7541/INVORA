@@ -38,7 +38,7 @@ const Login = () => {
         navigate("/dashboard");
       } catch (err) {
         console.log("Login error:", err);
-        toast.error(err.response?.data?.msg || "Login failed");
+        toast.error(err.response?.data?.message || "Login failed");
       }
     } else {
       toast.error("Please fill all inputs");
